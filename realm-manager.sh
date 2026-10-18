@@ -1,9 +1,3 @@
-
-# 备份旧脚本和停止失败的服务
-cp -a /root/realm-manager.sh /root/realm-manager.sh.bak 2>/dev/null || true
-systemctl stop realm.service 2>/dev/null || true
-
-cat > /root/realm-manager.sh <<'BASH'
 #!/usr/bin/env bash
 set -uo pipefail
 
@@ -453,18 +447,3 @@ menu() {
 }
 
 menu
-BASH
-
-chmod 755 /root/realm-manager.sh
-if bash -n /root/realm-manager.sh; then
-    echo "脚本语法检查通过。"
-    cat > /usr/local/bin/xb <<'EOF'
-#!/usr/bin/env bash
-exec bash /root/realm-manager.sh
-EOF
-    chmod 755 /usr/local/bin/xb
-    hash -r
-    bash /root/realm-manager.sh
-else
-    echo "脚本语法错误，请勿运行。旧脚本备份：/root/realm-manager.sh.bak"
-fi
